@@ -4,7 +4,6 @@ import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -19,7 +18,6 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import com.google.android.gms.location.places.ui.PlaceAutocomplete.RESULT_ERROR
-import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 class CitiesListFragment : Fragment(), Injectable {
@@ -32,11 +30,6 @@ class CitiesListFragment : Fragment(), Injectable {
     companion object {
         const val PLACE_AUTOCOMPLETE_REQUEST_CODE = 1
         val TAG = CitiesListFragment::class.java.canonicalName!!
-    }
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        AndroidSupportInjection.inject(this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

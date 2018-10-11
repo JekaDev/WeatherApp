@@ -1,14 +1,11 @@
 package com.example.ebobrovnichiy.weatherapp
 
+import android.app.Activity
 import android.app.Application
 import com.example.ebobrovnichiy.weatherapp.di.AppInjector
-import dagger.android.HasActivityInjector
-import android.app.Activity
-import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
 import javax.inject.Inject
-
-
 
 class WeatherApp : Application(), HasActivityInjector {
 
@@ -17,7 +14,6 @@ class WeatherApp : Application(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
-
         AppInjector.init(this)
     }
 

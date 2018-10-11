@@ -16,7 +16,8 @@ object AppInjector {
     fun init(weatherApp: WeatherApp) {
         DaggerAppComponent.builder().application(weatherApp)
                 .build().inject(weatherApp)
-        /*weatherApp
+
+        weatherApp
                 .registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
                     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
                         handleActivity(activity)
@@ -45,7 +46,7 @@ object AppInjector {
                     override fun onActivityDestroyed(activity: Activity) {
 
                     }
-                })*/
+                })
     }
 
     private fun handleActivity(activity: Activity) {
@@ -57,12 +58,12 @@ object AppInjector {
                     .registerFragmentLifecycleCallbacks(
                             object : FragmentManager.FragmentLifecycleCallbacks() {
                                 override fun onFragmentCreated(
-                                        fm: FragmentManager,
-                                        f: Fragment,
+                                        fragmentManager: FragmentManager,
+                                        fragment: Fragment,
                                         savedInstanceState: Bundle?
                                 ) {
-                                    if (f is Injectable) {
-                                        AndroidSupportInjection.inject(f)
+                                    if (fragment is Injectable) {
+                                        AndroidSupportInjection.inject(fragment)
                                     }
                                 }
                             }, true
