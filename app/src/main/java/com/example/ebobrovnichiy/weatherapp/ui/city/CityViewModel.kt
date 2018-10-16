@@ -17,7 +17,7 @@ constructor(
 
 
     fun addData(code: String){
-        forecastResponse.value = ForecastResponse(code)
+
 
         repository.weatherForecast()
     }
