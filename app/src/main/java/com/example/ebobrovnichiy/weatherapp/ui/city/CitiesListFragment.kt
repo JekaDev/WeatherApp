@@ -2,11 +2,13 @@ package com.example.ebobrovnichiy.weatherapp.ui.city
 
 import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,12 +31,17 @@ class CitiesListFragment : Fragment(), Injectable {
 
     companion object {
         const val PLACE_AUTOCOMPLETE_REQUEST_CODE = 1
-        val TAG = CitiesListFragment::class.java.canonicalName!!
+        val TAG = CitiesListFragment::class.java.simpleName
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         cityViewModel = ViewModelProviders.of(this, viewModelFactory).get(CityViewModel::class.java)
+
+        cityViewModel.forecastResponse.observe(this,
+                Observer {
+
+                })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,7 +49,8 @@ class CitiesListFragment : Fragment(), Injectable {
 
         val newCityButton = view.findViewById(R.id.newCity) as FloatingActionButton;
         newCityButton.setOnClickListener {
-            startAutocompleteActivity()
+            //startAutocompleteActivity()
+            cityViewModel.addData("Test")
         }
 
         return view

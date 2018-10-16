@@ -3,6 +3,8 @@ package com.example.ebobrovnichiy.weatherapp.di.module
 import com.example.ebobrovnichiy.weatherapp.BuildConfig.BASE_URL
 import com.example.ebobrovnichiy.weatherapp.BuildConfig.KEY_API
 import com.example.ebobrovnichiy.weatherapp.api.WeatherService
+import com.github.leonardoxh.livedatacalladapter.LiveDataCallAdapterFactory
+import com.github.leonardoxh.livedatacalladapter.LiveDataResponseBodyConverterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -17,9 +19,11 @@ class AppModule {
     fun provideWeatherService(): WeatherService {
         return Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
                 .client(provideOkHttpClient())
-                //.addCallAdapterFactory(LiveDataCallAdapterFactory())
+                //.addConverterFactory(LiveDataResponseBodyConverterFactory.create())
+                .addCallAdapterFactory(LiveDataCallAdapterFactory.create())
+                .addConverterFactory(LiveDataResponseBodyConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(WeatherService::class.java)
     }
