@@ -2,7 +2,6 @@ package com.example.ebobrovnichiy.weatherapp.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.MutableLiveData
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import com.example.ebobrovnichiy.weatherapp.AppExecutors
@@ -10,8 +9,8 @@ import com.example.ebobrovnichiy.weatherapp.api.ApiEmptyResponse
 import com.example.ebobrovnichiy.weatherapp.api.ApiErrorResponse
 import com.example.ebobrovnichiy.weatherapp.api.ApiResponse
 import com.example.ebobrovnichiy.weatherapp.api.ApiSuccessResponse
-import com.example.ebobrovnichiy.weatherapp.model.CityInfo
-import com.example.ebobrovnichiy.weatherapp.model.ForecastResponse
+import com.example.ebobrovnichiy.weatherapp.db.Owner
+import com.example.ebobrovnichiy.weatherapp.db.User
 import com.example.ebobrovnichiy.weatherapp.utilit.Resource
 
 abstract class NetworkBoundResource<ResultType, RequestType>
@@ -22,10 +21,8 @@ abstract class NetworkBoundResource<ResultType, RequestType>
     init {
         result.value = Resource.loading(null)
         val dbSource = loadFromDb()
-        result.addSource(dbSource){data ->
-            result.addSource(dbSource){newData ->
-                val jhwbh = ""
-            }
+        result.addSource(dbSource){newData ->
+            var l = ""
         }
         fetchFromNetwork()
     }
@@ -43,8 +40,10 @@ abstract class NetworkBoundResource<ResultType, RequestType>
         result.addSource(apiResponse) { response ->
             when (response) {
                 is ApiSuccessResponse -> {
-                    appExecutors.diskIO().execute {
-                        saveCallResult(processResponse(response))
+                    appExecutors.diskIO().execute{
+
+                        saveCallResult(User(1,"weather", null, null, null, null,null, Owner("First", null)))
+
                     }
                 }
                 is ApiEmptyResponse -> {
@@ -63,11 +62,13 @@ abstract class NetworkBoundResource<ResultType, RequestType>
     protected abstract fun createCall(): LiveData<ApiResponse<RequestType>>
 
     @WorkerThread
-    protected open fun processResponse(response: ApiSuccessResponse<RequestType>) = response.body
-
-    @WorkerThread
-    protected abstract fun saveCallResult(item: RequestType)
+    protected abstract fun saveCallResult(item: User)
 
     @MainThread
-    protected abstract fun loadFromDb(): LiveData<List<CityInfo>>
+    protected abstract fun loadFromDb(): LiveData<User>
+
+
+
+    @WorkerThread
+    protected open fun processResponse(response: ApiSuccessResponse<RequestType>) = response.body
 }

@@ -4,9 +4,8 @@ import android.app.Application
 import android.arch.persistence.room.Room
 import com.example.ebobrovnichiy.weatherapp.BuildConfig.BASE_URL
 import com.example.ebobrovnichiy.weatherapp.BuildConfig.KEY_API
-import com.example.ebobrovnichiy.weatherapp.WeatherApp
 import com.example.ebobrovnichiy.weatherapp.api.WeatherService
-import com.example.ebobrovnichiy.weatherapp.dao.CityInfoDao
+import com.example.ebobrovnichiy.weatherapp.db.UserDao
 import com.example.ebobrovnichiy.weatherapp.db.WeatherDb
 import com.example.ebobrovnichiy.weatherapp.utilit.LiveDataCallAdapterFactory
 import dagger.Module
@@ -61,7 +60,7 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideCityInfoDao(db: WeatherDb): CityInfoDao {
-        return db.cityInfoDao()
+    fun provideUserDao(db: WeatherDb): UserDao {
+        return db.userDao()
     }
 }
