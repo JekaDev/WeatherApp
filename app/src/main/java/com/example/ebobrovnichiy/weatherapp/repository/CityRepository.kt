@@ -1,25 +1,41 @@
 package com.example.ebobrovnichiy.weatherapp.repository
 
-import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.LiveData
 import com.example.ebobrovnichiy.weatherapp.AppExecutors
+import com.example.ebobrovnichiy.weatherapp.api.ApiResponse
 import com.example.ebobrovnichiy.weatherapp.api.WeatherService
+import com.example.ebobrovnichiy.weatherapp.dao.CityInfoDao
+import com.example.ebobrovnichiy.weatherapp.model.CityInfo
 import com.example.ebobrovnichiy.weatherapp.model.ForecastResponse
-import com.github.leonardoxh.livedatacalladapter.Resource
+import com.example.ebobrovnichiy.weatherapp.utilit.Resource
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CityRepository @Inject constructor(
         private val appExecutors: AppExecutors,
-        private val weatherService: WeatherService
+        private val weatherService: WeatherService,
+        private val cityInfoDao: CityInfoDao
 ) {
 
-    val result = MutableLiveData<Resource<ForecastResponse>>()
 
-    fun weatherForecast() {
-        appExecutors.networkIO().execute {
-            val forrecast = weatherService.requestForecastForCity(51.5073509,-0.1277583)
-            val daya = "ks"
-        }
+    fun weatherForecast(lat: Double, lon: Double): LiveData<Resource<ForecastResponse>> {
+        return object : NetworkBoundResource<ForecastResponse, ForecastResponse>(appExecutors) {
+
+            override fun loadFromDb(): LiveData<List<CityInfo>> {
+                val data = cityInfoDao.findByName("London")
+                return data
+            }
+
+            override fun saveCallResult(item: ForecastResponse) {
+                cityInfoDao.insertCityInfo(item.cityInfo)
+            }
+
+            override fun createCall(): LiveData<ApiResponse<ForecastResponse>> {
+
+                val data = weatherService.requestForecastForCity(lat, lon)
+                return data
+            }
+        }.asLiveData()
     }
 }

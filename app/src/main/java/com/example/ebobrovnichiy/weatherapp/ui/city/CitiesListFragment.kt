@@ -38,9 +38,9 @@ class CitiesListFragment : Fragment(), Injectable {
         super.onActivityCreated(savedInstanceState)
         cityViewModel = ViewModelProviders.of(this, viewModelFactory).get(CityViewModel::class.java)
 
-        cityViewModel.forecastResponse.observe(this,
-                Observer {
-
+        cityViewModel.addData("").observe(this,
+                Observer { data ->
+                    val ff = data?.data
                 })
     }
 
@@ -74,7 +74,7 @@ class CitiesListFragment : Fragment(), Injectable {
         when (resultCode) {
             RESULT_OK -> {
                 val place = PlaceAutocomplete.getPlace(activity, data)
-                Log.i(TAG, "Place: " + place.name)
+                Log.i(TAG, "Place: " + place.latLng)
             }
             RESULT_ERROR -> {
                 val status = PlaceAutocomplete.getStatus(activity, data)

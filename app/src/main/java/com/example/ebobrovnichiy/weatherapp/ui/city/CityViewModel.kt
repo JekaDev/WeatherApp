@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.example.ebobrovnichiy.weatherapp.model.ForecastResponse
 import com.example.ebobrovnichiy.weatherapp.repository.CityRepository
+import com.example.ebobrovnichiy.weatherapp.utilit.Resource
 import javax.inject.Inject
 
 class CityViewModel
@@ -13,13 +14,9 @@ constructor(
         val repository: CityRepository
 ) : ViewModel() {
 
-    val forecastResponse = MutableLiveData<ForecastResponse>()
-
-
-    fun addData(code: String){
-
-
-        repository.weatherForecast()
+    fun addData(code: String) : LiveData<Resource<ForecastResponse>>{
+        val data = repository.weatherForecast(51.5073509,-0.1277583)
+        val oko = ""
+        return data;
     }
-
 }
