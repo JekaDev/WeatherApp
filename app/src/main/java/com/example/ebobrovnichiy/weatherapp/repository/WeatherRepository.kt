@@ -61,7 +61,14 @@ class WeatherRepository @Inject constructor(
                             try {
                                 cityInfoDao.insert(response.body.cityInfo)
 
-                                response.body.forecasts.forEach { item -> forecastDao.insert(Forecast(response.body.cityInfo.id, item.date, item.main, item.weathers, item.wind)) }
+                                response.body.forecasts.forEach { item ->
+                                    forecastDao.insert(Forecast(
+                                            response.body.cityInfo.id,
+                                            item.date,
+                                            item.main,
+                                            item.weathers,
+                                            item.wind))
+                                }
                                 db.setTransactionSuccessful()
                             } finally {
                                 db.endTransaction()
@@ -78,7 +85,6 @@ class WeatherRepository @Inject constructor(
                 }
             }
         }
-
     }
 
     fun citiesInfoDb(): LiveData<Resource<List<CityInfo>>> {

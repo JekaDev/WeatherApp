@@ -4,10 +4,11 @@ import android.arch.persistence.room.*
 import com.example.ebobrovnichiy.weatherapp.db.DataTypeConverter
 import com.google.gson.annotations.SerializedName
 
-@Entity(foreignKeys = arrayOf(ForeignKey(entity = CityInfo::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("cityId"),
-        onDelete = ForeignKey.CASCADE)))
+@Entity(foreignKeys = [ForeignKey(
+        entity = CityInfo::class,
+        parentColumns = ["id"],
+        childColumns = ["cityId"],
+        onDelete = ForeignKey.CASCADE)])
 
 @TypeConverters(DataTypeConverter::class)
 data class Forecast(
