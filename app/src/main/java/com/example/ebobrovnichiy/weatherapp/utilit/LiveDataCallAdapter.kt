@@ -1,7 +1,7 @@
 package com.example.ebobrovnichiy.weatherapp.utilit
 
 import android.arch.lifecycle.LiveData
-import com.example.ebobrovnichiy.weatherapp.api.ApiResponse
+import com.example.ebobrovnichiy.weatherapp.dto.ApiResponse
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Callback

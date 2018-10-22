@@ -1,4 +1,4 @@
-package com.example.ebobrovnichiy.weatherapp.utilit
+package com.example.ebobrovnichiy.weatherapp.dto
 
 enum class Status {
     SUCCESS,

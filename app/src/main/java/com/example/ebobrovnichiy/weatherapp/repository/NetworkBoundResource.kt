@@ -5,13 +5,7 @@ import android.arch.lifecycle.MediatorLiveData
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import com.example.ebobrovnichiy.weatherapp.AppExecutors
-import com.example.ebobrovnichiy.weatherapp.api.ApiEmptyResponse
-import com.example.ebobrovnichiy.weatherapp.api.ApiErrorResponse
-import com.example.ebobrovnichiy.weatherapp.api.ApiResponse
-import com.example.ebobrovnichiy.weatherapp.api.ApiSuccessResponse
-import com.example.ebobrovnichiy.weatherapp.db.Owner
-import com.example.ebobrovnichiy.weatherapp.db.User
-import com.example.ebobrovnichiy.weatherapp.utilit.Resource
+import com.example.ebobrovnichiy.weatherapp.dto.*
 
 abstract class NetworkBoundResource<ResultType, RequestType>
 @MainThread constructor(private val appExecutors: AppExecutors) {
@@ -21,10 +15,16 @@ abstract class NetworkBoundResource<ResultType, RequestType>
     init {
         result.value = Resource.loading(null)
         val dbSource = loadFromDb()
-        result.addSource(dbSource){newData ->
-            var l = ""
+        result.addSource(dbSource) { data ->
+            result.removeSource(dbSource)
+            if (shouldFetch(data)) {
+                fetchFromNetwork(dbSource)
+            } else {
+                result.addSource(dbSource) { newData ->
+                    setValue(Resource.success(newData))
+                }
+            }
         }
-        fetchFromNetwork()
     }
 
     @MainThread
@@ -34,41 +34,63 @@ abstract class NetworkBoundResource<ResultType, RequestType>
         }
     }
 
-    private fun fetchFromNetwork() {
+    private fun fetchFromNetwork(dbSource: LiveData<ResultType>) {
         val apiResponse = createCall()
-
+        // we re-attach dbSource as a new source, it will dispatch its latest value quickly
+        result.addSource(dbSource) { newData ->
+            setValue(Resource.loading(newData))
+        }
         result.addSource(apiResponse) { response ->
+            result.removeSource(apiResponse)
+            result.removeSource(dbSource)
             when (response) {
                 is ApiSuccessResponse -> {
-                    appExecutors.diskIO().execute{
-
-                        saveCallResult(User(1,"weather", null, null, null, null,null, Owner("First", null)))
-
+                    appExecutors.diskIO().execute {
+                        saveCallResult(processResponse(response))
+                        appExecutors.mainThread().execute {
+                            // we specially request a new live data,
+                            // otherwise we will get immediately last cached value,
+                            // which may not be updated with latest results received from network.
+                            result.addSource(loadFromDb()) { newData ->
+                                setValue(Resource.success(newData))
+                            }
+                        }
                     }
                 }
                 is ApiEmptyResponse -> {
-
+                    appExecutors.mainThread().execute {
+                        // reload from disk whatever we had
+                        result.addSource(loadFromDb()) { newData ->
+                            setValue(Resource.success(newData))
+                        }
+                    }
                 }
                 is ApiErrorResponse -> {
-
+                    onFetchFailed()
+                    result.addSource(dbSource) { newData ->
+                        setValue(Resource.error(response.errorMessage, newData))
+                    }
                 }
             }
         }
     }
 
+    protected open fun onFetchFailed() {}
+
     fun asLiveData() = result as LiveData<Resource<ResultType>>
-
-    @MainThread
-    protected abstract fun createCall(): LiveData<ApiResponse<RequestType>>
-
-    @WorkerThread
-    protected abstract fun saveCallResult(item: User)
-
-    @MainThread
-    protected abstract fun loadFromDb(): LiveData<User>
-
-
 
     @WorkerThread
     protected open fun processResponse(response: ApiSuccessResponse<RequestType>) = response.body
+
+    @WorkerThread
+    protected abstract fun saveCallResult(item: RequestType)
+
+    @MainThread
+    protected abstract fun shouldFetch(data: ResultType?): Boolean
+
+    @MainThread
+    protected abstract fun loadFromDb(): LiveData<ResultType>
+
+    @MainThread
+    protected abstract fun createCall(): LiveData<ApiResponse<RequestType>>
 }

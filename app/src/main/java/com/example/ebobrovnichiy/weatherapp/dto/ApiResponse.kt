@@ -1,4 +1,4 @@
-package com.example.ebobrovnichiy.weatherapp.api
+package com.example.ebobrovnichiy.weatherapp.dto
 
 import retrofit2.Response
 import java.util.regex.Pattern
@@ -6,7 +6,8 @@ import java.util.regex.Pattern
 sealed class ApiResponse<T> {
     companion object {
         fun <T> create(error: Throwable): ApiErrorResponse<T> {
-            return ApiErrorResponse(error.message ?: "unknown error")
+            return ApiErrorResponse(error.message
+                    ?: "unknown error")
         }
 
         fun <T> create(response: Response<T>): ApiResponse<T> {
@@ -27,7 +28,8 @@ sealed class ApiResponse<T> {
                 } else {
                     msg
                 }
-                ApiErrorResponse(errorMsg ?: "unknown error")
+                ApiErrorResponse(errorMsg
+                        ?: "unknown error")
             }
         }
     }
