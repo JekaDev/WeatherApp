@@ -2,6 +2,7 @@ package com.example.ebobrovnichiy.weatherapp.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
+import android.util.Log
 import com.example.ebobrovnichiy.weatherapp.AppExecutors
 import com.example.ebobrovnichiy.weatherapp.api.WeatherService
 import com.example.ebobrovnichiy.weatherapp.dao.CityInfoDao
@@ -10,6 +11,7 @@ import com.example.ebobrovnichiy.weatherapp.db.WeatherDb
 import com.example.ebobrovnichiy.weatherapp.dto.*
 import com.example.ebobrovnichiy.weatherapp.model.CityInfo
 import com.example.ebobrovnichiy.weatherapp.model.Forecast
+import com.example.ebobrovnichiy.weatherapp.ui.city.CitiesListFragment
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,6 +27,9 @@ class WeatherRepository @Inject constructor(
 
     private val result = MediatorLiveData<Resource<List<CityInfo>>>()
 
+    companion object {
+        val TAG = WeatherRepository::class.java.simpleName
+    }
 
     /*fun citiesInfo(lat: Double, lon: Double): LiveData<Resource<List<CityInfo>>> {
         return object : NetworkBoundResource<List<CityInfo>, ForecastResponse>(appExecutors) {
@@ -49,6 +54,10 @@ class WeatherRepository @Inject constructor(
         }.asLiveData()
     }*/
 
+    fun update() {
+        val kmk = ""
+    }
+
     fun citiesInfo(lat: Double, lon: Double) {
         result.value = Resource.loading(null)
         appExecutors.networkIO().execute {
@@ -60,10 +69,10 @@ class WeatherRepository @Inject constructor(
                             db.beginTransaction()
                             try {
                                 cityInfoDao.insert(response.body.cityInfo)
-
+                                val cityId = response.body.cityInfo.id
                                 response.body.forecasts.forEach { item ->
                                     forecastDao.insert(Forecast(
-                                            response.body.cityInfo.id,
+                                            cityId,
                                             item.date,
                                             item.main,
                                             item.weathers,
@@ -76,8 +85,7 @@ class WeatherRepository @Inject constructor(
                         }
                     }
                     is ApiEmptyResponse -> {
-                        val jnj = ""
-
+                        TODO()
                     }
                     is ApiErrorResponse -> {
                         result.value = Resource.error(response.errorMessage, null)

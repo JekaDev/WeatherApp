@@ -2,19 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.ebobrovnichiy.weatherapp">
-    
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
+        android:name=".WeatherApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".WeatherApp"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.activity.MainActivity">
+        <activity android:name=".ui.activity.SplashScreenActivity"
+            android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,9 +25,19 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.activity.MainActivity"/>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_key"/>
+            android:value="@string/google_key" />
+
+        <service
+            android:name=".syncservice.ForecastUpdateJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+        </service>
 
     </application>
 

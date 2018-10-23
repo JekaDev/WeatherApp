@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,25 +20,38 @@ import com.example.ebobrovnichiy.weatherapp.R
 import com.example.ebobrovnichiy.weatherapp.di.Injectable
 import com.example.ebobrovnichiy.weatherapp.dto.Status.*
 import com.example.ebobrovnichiy.weatherapp.model.CityInfo
+import com.example.ebobrovnichiy.weatherapp.syncservice.ForecastUpdateJobService
+import com.example.ebobrovnichiy.weatherapp.ui.BaseDialog
+import com.example.ebobrovnichiy.weatherapp.ui.detail.DetailForecastFragment
+import com.firebase.jobdispatcher.FirebaseJobDispatcher
+import com.firebase.jobdispatcher.GooglePlayDriver
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import com.google.android.gms.location.places.ui.PlaceAutocomplete.RESULT_ERROR
 import javax.inject.Inject
+import com.firebase.jobdispatcher.Constraint
+import com.firebase.jobdispatcher.RetryStrategy
+import com.firebase.jobdispatcher.Trigger
+import com.firebase.jobdispatcher.Lifetime
+import kotlinx.android.synthetic.main.cities_list_fragment.*
+
 
 class CitiesListFragment : Fragment(), Injectable {
+
+    companion object {
+        const val PLACE_AUTOCOMPLETE_REQUEST_CODE = 1
+        val TAG = CitiesListFragment::class.java.simpleName!!
+    }
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    lateinit var cityViewModel: CityViewModel
+    private lateinit var cityViewModel: CityViewModel
 
-    companion object {
-        const val PLACE_AUTOCOMPLETE_REQUEST_CODE = 1
-        val TAG = CitiesListFragment::class.java.simpleName
-    }
+    private lateinit var swipeRefresh: SwipeRefreshLayout
 
-    private var adapter: CityInfoAdapter? = null
+    private lateinit var adapter: CityInfoAdapter
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -54,7 +68,14 @@ class CitiesListFragment : Fragment(), Injectable {
             startAutocompleteActivity()
         }
 
+        swipeRefresh = view.findViewById(R.id.swipeRefresh)
+        swipeRefresh.setOnRefreshListener {
+            cityViewModel.update()
+            swipeRefresh.isRefreshing = false
+        }
+
         initAdapter(view)
+        fireBaseJobDispatcher()
         return view
     }
 
@@ -90,11 +111,14 @@ class CitiesListFragment : Fragment(), Injectable {
     }
 
     private fun itemClicked(cityInfo: CityInfo) {
-        cityViewModel.delete(cityInfo)
     }
 
     private fun longClicked(cityInfo: CityInfo) {
-        cityViewModel.delete(cityInfo)
+        val dialog = BaseDialog.newInstance(getString(R.string.warning_delete_city))
+        dialog.onResult = { result ->
+            cityViewModel.delete(cityInfo)
+        }
+        dialog.show(fragmentManager, "warningDialog")
     }
 
     private fun initAdapter(view: View) {
@@ -112,12 +136,41 @@ class CitiesListFragment : Fragment(), Injectable {
                 LOADING -> {
                 }
                 SUCCESS -> {
-                    adapter?.addData(data.data!!)
+                    adapter.addData(data.data!!)
                 }
                 ERROR -> {
                     view?.let { Snackbar.make(it, data.message.toString(), Snackbar.LENGTH_LONG).show() }
                 }
             }
         })
+    }
+
+    private fun fireBaseJobDispatcher() {
+        val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
+
+        val myExtrasBundle = Bundle()
+        myExtrasBundle.putString("some_key", "some_value")
+
+        val job = dispatcher.newJobBuilder()
+                // the JobService that will be called
+                .setService(ForecastUpdateJobService::class.java)
+                // uniquely identifies the job
+                .setTag("my-unique-tag")
+                // one-off job
+                .setRecurring(true)
+                // don't persist past a device reboot
+                .setLifetime(Lifetime.FOREVER)
+                // start between 0 and 60 seconds from now
+                .setTrigger(Trigger.executionWindow(0, 10))
+                // don't overwrite an existing job with the same tag
+                .setReplaceCurrent(true)
+                // retry with exponential backoff
+                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                // constraints that need to be satisfied for the job to run
+                .setConstraints(Constraint.ON_ANY_NETWORK)
+                .setExtras(myExtrasBundle)
+                .build()
+
+        dispatcher.mustSchedule(job)
     }
 }

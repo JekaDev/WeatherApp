@@ -1,3 +1,4 @@
 <resources>
     <string name="google_key">AIzaSyAXYhLMwhdb6-xeR42FmzARRnmjm5PZWgk</string>
+    <string name="icon_url">http://openweathermap.org/img/w/%1$s.png</string>
 </resources>

@@ -13,60 +13,38 @@ import dagger.android.support.HasSupportFragmentInjector
 
 object AppInjector {
     fun init(weatherApp: WeatherApp) {
-        DaggerAppComponent.builder().application(weatherApp)
-                .build().inject(weatherApp)
+        DaggerAppComponent
+                .builder()
+                .application(weatherApp)
+                .build()
+                .inject(weatherApp)
 
-        weatherApp
-                .registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
-                    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                        handleActivity(activity)
-                    }
+        weatherApp.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+                handleActivity(activity)
+            }
 
-                    override fun onActivityStarted(activity: Activity) {
-
-                    }
-
-                    override fun onActivityResumed(activity: Activity) {
-
-                    }
-
-                    override fun onActivityPaused(activity: Activity) {
-
-                    }
-
-                    override fun onActivityStopped(activity: Activity) {
-
-                    }
-
-                    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
-
-                    }
-
-                    override fun onActivityDestroyed(activity: Activity) {
-
-                    }
-                })
+            override fun onActivityStarted(activity: Activity) {}
+            override fun onActivityResumed(activity: Activity) {}
+            override fun onActivityPaused(activity: Activity) {}
+            override fun onActivityStopped(activity: Activity) {}
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {}
+            override fun onActivityDestroyed(activity: Activity) {}
+        })
     }
 
     private fun handleActivity(activity: Activity) {
         if (activity is HasSupportFragmentInjector) {
             AndroidInjection.inject(activity)
         }
-        if (activity is FragmentActivity) {
-            activity.supportFragmentManager
-                    .registerFragmentLifecycleCallbacks(
-                            object : FragmentManager.FragmentLifecycleCallbacks() {
-                                override fun onFragmentCreated(
-                                        fragmentManager: FragmentManager,
-                                        fragment: Fragment,
-                                        savedInstanceState: Bundle?
-                                ) {
-                                    if (fragment is Injectable) {
-                                        AndroidSupportInjection.inject(fragment)
-                                    }
-                                }
-                            }, true
-                    )
-        }
+
+        (activity as? FragmentActivity)?.supportFragmentManager?.registerFragmentLifecycleCallbacks(
+                object : FragmentManager.FragmentLifecycleCallbacks() {
+                    override fun onFragmentCreated(fm: FragmentManager?, f: Fragment?, savedInstanceState: Bundle?) {
+                        if (f is Injectable)
+                            AndroidSupportInjection.inject(f)
+                    }
+                },
+                true)
     }
 }

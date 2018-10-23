@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">WeatherApp</string>
+
+    <string name="positive_button">Ok</string>
+    <string name="negative_button">Cancel</string>
+    <string name="warning_delete_city">Delete this city?</string>
 </resources>

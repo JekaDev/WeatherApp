@@ -24,4 +24,8 @@ constructor(
     fun delete(cityInfo: CityInfo){
         repository.deleteCityInfo(cityInfo)
     }
+
+    fun update(){
+        repository.update()
+    }
 }

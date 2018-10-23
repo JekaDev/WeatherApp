@@ -1,7 +1,12 @@
 package com.example.ebobrovnichiy.weatherapp.model
 
 import android.arch.persistence.room.*
+import android.content.res.Resources
+import android.provider.Settings.Global.getString
+import com.example.ebobrovnichiy.weatherapp.BuildConfig
+import com.example.ebobrovnichiy.weatherapp.R
 import com.example.ebobrovnichiy.weatherapp.db.DataTypeConverter
+import com.example.ebobrovnichiy.weatherapp.dto.Resource
 import com.google.gson.annotations.SerializedName
 
 @Entity(foreignKeys = [ForeignKey(
@@ -12,7 +17,7 @@ import com.google.gson.annotations.SerializedName
 
 @TypeConverters(DataTypeConverter::class)
 data class Forecast(
-        val cityId: Int,
+        var cityId: Int,
         @SerializedName("dt")
         val date: Int,
         @SerializedName("main")

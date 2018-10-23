@@ -16,6 +16,9 @@ interface CityInfoDao {
     @Query("SELECT * FROM cityInfo")
     fun findAll(): LiveData<List<CityInfo>>
 
+    @Query("SELECT * FROM cityInfo")
+    fun findCities(): List<CityInfo>
+
     @Delete
     fun delete(cityInfo: CityInfo)
 }
