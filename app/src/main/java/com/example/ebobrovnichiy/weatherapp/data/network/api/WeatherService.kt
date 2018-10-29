@@ -1,8 +1,8 @@
-package com.example.ebobrovnichiy.weatherapp.api
+package com.example.ebobrovnichiy.weatherapp.data.network.api
 
 import android.arch.lifecycle.LiveData
-import com.example.ebobrovnichiy.weatherapp.dto.ApiResponse
-import com.example.ebobrovnichiy.weatherapp.model.ForecastResponse
+import com.example.ebobrovnichiy.weatherapp.data.network.dto.ApiResponse
+import com.example.ebobrovnichiy.weatherapp.data.model.ForecastResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

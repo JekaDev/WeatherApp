@@ -1,4 +1,4 @@
-package com.example.ebobrovnichiy.weatherapp.ui
+package com.example.ebobrovnichiy.weatherapp.ui.fragment
 
 import android.app.Dialog
 import android.os.Bundle
@@ -6,12 +6,12 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDialogFragment
 import com.example.ebobrovnichiy.weatherapp.R
 
-class BaseDialog : AppCompatDialogFragment() {
+class WarningDialog : AppCompatDialogFragment() {
 
     companion object {
         const val EXTRA_MESSAGE = "Message"
-        fun newInstance(message: String): BaseDialog {
-            val dialog = BaseDialog()
+        fun newInstance(message: String): WarningDialog {
+            val dialog = WarningDialog()
             val args = Bundle().apply {
                 putString(EXTRA_MESSAGE, message)
             }

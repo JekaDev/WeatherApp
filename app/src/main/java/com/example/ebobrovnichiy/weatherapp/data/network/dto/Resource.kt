@@ -1,6 +1,6 @@
-package com.example.ebobrovnichiy.weatherapp.dto
+package com.example.ebobrovnichiy.weatherapp.data.network.dto
 
-import com.example.ebobrovnichiy.weatherapp.dto.Status.*
+import com.example.ebobrovnichiy.weatherapp.data.network.dto.Status.*
 
 data class Resource<out T>(val status: Status, val data: T?, val message: String?) {
     companion object {

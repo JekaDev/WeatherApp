@@ -1,8 +1,8 @@
-package com.example.ebobrovnichiy.weatherapp.dao
+package com.example.ebobrovnichiy.weatherapp.data.db.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
-import com.example.ebobrovnichiy.weatherapp.model.CityInfo
+import com.example.ebobrovnichiy.weatherapp.data.model.CityInfo
 
 @Dao
 interface CityInfoDao {

@@ -1,4 +1,4 @@
-package com.example.ebobrovnichiy.weatherapp.model
+package com.example.ebobrovnichiy.weatherapp.data.model
 
 import android.arch.persistence.room.Entity
 

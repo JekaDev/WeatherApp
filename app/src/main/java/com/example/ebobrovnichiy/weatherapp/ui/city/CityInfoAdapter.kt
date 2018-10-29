@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.ebobrovnichiy.weatherapp.R
-import com.example.ebobrovnichiy.weatherapp.model.CityInfo
+import com.example.ebobrovnichiy.weatherapp.data.model.CityInfo
 import kotlinx.android.synthetic.main.city_info_item.view.*
 
 class CityInfoAdapter(val longClicked: (CityInfo) -> Unit, val clickListener: (CityInfo) -> Unit) : RecyclerView.Adapter<CityInfoAdapter.ViewHolder>() {

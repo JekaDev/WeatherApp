@@ -1,7 +1,7 @@
-package com.example.ebobrovnichiy.weatherapp.db
+package com.example.ebobrovnichiy.weatherapp.data.db
 
 import android.arch.persistence.room.TypeConverter
-import com.example.ebobrovnichiy.weatherapp.model.Weather
+import com.example.ebobrovnichiy.weatherapp.data.model.Weather
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.*

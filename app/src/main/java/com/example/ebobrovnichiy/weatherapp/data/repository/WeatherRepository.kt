@@ -1,17 +1,16 @@
-package com.example.ebobrovnichiy.weatherapp.repository
+package com.example.ebobrovnichiy.weatherapp.data.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
-import android.util.Log
 import com.example.ebobrovnichiy.weatherapp.AppExecutors
-import com.example.ebobrovnichiy.weatherapp.api.WeatherService
-import com.example.ebobrovnichiy.weatherapp.dao.CityInfoDao
-import com.example.ebobrovnichiy.weatherapp.dao.ForecastDao
-import com.example.ebobrovnichiy.weatherapp.db.WeatherDb
-import com.example.ebobrovnichiy.weatherapp.dto.*
-import com.example.ebobrovnichiy.weatherapp.model.CityInfo
-import com.example.ebobrovnichiy.weatherapp.model.Forecast
-import com.example.ebobrovnichiy.weatherapp.ui.city.CitiesListFragment
+import com.example.ebobrovnichiy.weatherapp.data.network.api.WeatherService
+import com.example.ebobrovnichiy.weatherapp.data.db.dao.CityInfoDao
+import com.example.ebobrovnichiy.weatherapp.data.db.dao.ForecastDao
+import com.example.ebobrovnichiy.weatherapp.data.db.WeatherDb
+import com.example.ebobrovnichiy.weatherapp.data.db.dao.WeatherForecastDao
+import com.example.ebobrovnichiy.weatherapp.data.network.dto.*
+import com.example.ebobrovnichiy.weatherapp.data.model.CityInfo
+import com.example.ebobrovnichiy.weatherapp.data.model.Forecast
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,6 +21,7 @@ class WeatherRepository @Inject constructor(
         private val weatherService: WeatherService,
         private val cityInfoDao: CityInfoDao,
         private val forecastDao: ForecastDao,
+        private val weatherForecastDao: WeatherForecastDao,
         private val db: WeatherDb
 ) {
 
@@ -95,7 +95,15 @@ class WeatherRepository @Inject constructor(
         }
     }
 
-    fun citiesInfoDb(): LiveData<Resource<List<CityInfo>>> {
+    fun citiesInfoDb(data: Int): LiveData<Resource<List<CityInfo>>> {
+
+        appExecutors.diskIO().execute {
+            val ksmk = weatherForecastDao.weatherForecasts(data)
+            result.addSource(ksmk){newItem ->
+                val kmk = ""
+            }
+        }
+
         result.value = Resource.loading(null)
         appExecutors.diskIO().execute {
             val response = cityInfoDao.findAll()

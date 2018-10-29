@@ -2,9 +2,9 @@ package com.example.ebobrovnichiy.weatherapp.ui.city
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import com.example.ebobrovnichiy.weatherapp.dto.Resource
-import com.example.ebobrovnichiy.weatherapp.model.CityInfo
-import com.example.ebobrovnichiy.weatherapp.repository.WeatherRepository
+import com.example.ebobrovnichiy.weatherapp.data.network.dto.Resource
+import com.example.ebobrovnichiy.weatherapp.data.model.CityInfo
+import com.example.ebobrovnichiy.weatherapp.data.repository.WeatherRepository
 import javax.inject.Inject
 
 class CityViewModel

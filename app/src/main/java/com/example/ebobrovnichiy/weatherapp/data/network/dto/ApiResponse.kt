@@ -1,4 +1,4 @@
-package com.example.ebobrovnichiy.weatherapp.dto
+package com.example.ebobrovnichiy.weatherapp.data.network.dto
 
 import retrofit2.Response
 import java.util.regex.Pattern

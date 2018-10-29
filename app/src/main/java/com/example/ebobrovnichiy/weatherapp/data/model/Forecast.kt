@@ -1,12 +1,7 @@
-package com.example.ebobrovnichiy.weatherapp.model
+package com.example.ebobrovnichiy.weatherapp.data.model
 
 import android.arch.persistence.room.*
-import android.content.res.Resources
-import android.provider.Settings.Global.getString
-import com.example.ebobrovnichiy.weatherapp.BuildConfig
-import com.example.ebobrovnichiy.weatherapp.R
-import com.example.ebobrovnichiy.weatherapp.db.DataTypeConverter
-import com.example.ebobrovnichiy.weatherapp.dto.Resource
+import com.example.ebobrovnichiy.weatherapp.data.db.DataTypeConverter
 import com.google.gson.annotations.SerializedName
 
 @Entity(foreignKeys = [ForeignKey(

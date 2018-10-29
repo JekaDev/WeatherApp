@@ -1,19 +1,16 @@
 package com.example.ebobrovnichiy.weatherapp.syncservice
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.LifecycleRegistry
 import android.util.Log
 import com.example.ebobrovnichiy.weatherapp.di.AppInjector
 import com.example.ebobrovnichiy.weatherapp.di.weatherApp
-import com.example.ebobrovnichiy.weatherapp.repository.WeatherRepository
+import com.example.ebobrovnichiy.weatherapp.data.repository.WeatherRepository
 import com.example.ebobrovnichiy.weatherapp.ui.city.CitiesListFragment
 import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
-class ForecastUpdateJobService : JobService(), LifecycleOwner {
+class ForecastUpdateJobService : JobService() {
 
     companion object {
         val TAG = CitiesListFragment::class.java.simpleName!!
@@ -39,6 +36,4 @@ class ForecastUpdateJobService : JobService(), LifecycleOwner {
         weatherRepository.citiesInfo(51.5085, -0.1258)
         return false
     }
-
-    override fun getLifecycle(): Lifecycle = LifecycleRegistry(this)
 }

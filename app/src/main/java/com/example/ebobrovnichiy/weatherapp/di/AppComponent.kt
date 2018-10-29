@@ -10,13 +10,16 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
+import com.example.ebobrovnichiy.weatherapp.di.module.ServiceBuilderModule
+
 
 @Singleton
 @Component(
         modules = [
             AndroidSupportInjectionModule::class,
             AppModule::class,
-            MainActivityModule::class]
+            MainActivityModule::class,
+            ServiceBuilderModule::class]
 )
 interface AppComponent {
     @Component.Builder

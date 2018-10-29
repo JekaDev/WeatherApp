@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.activity.SplashScreenActivity"
+        <activity android:name=".ui.SplashScreenActivity"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.MainActivity"/>
+        <activity android:name=".ui.MainActivity"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

@@ -1,4 +1,4 @@
-package com.example.ebobrovnichiy.weatherapp.ui.activity
+package com.example.ebobrovnichiy.weatherapp.ui
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

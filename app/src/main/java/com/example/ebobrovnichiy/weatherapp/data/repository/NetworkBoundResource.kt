@@ -1,11 +1,11 @@
-package com.example.ebobrovnichiy.weatherapp.repository
+package com.example.ebobrovnichiy.weatherapp.data.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import com.example.ebobrovnichiy.weatherapp.AppExecutors
-import com.example.ebobrovnichiy.weatherapp.dto.*
+import com.example.ebobrovnichiy.weatherapp.data.network.dto.*
 
 abstract class NetworkBoundResource<ResultType, RequestType>
 @MainThread constructor(private val appExecutors: AppExecutors) {

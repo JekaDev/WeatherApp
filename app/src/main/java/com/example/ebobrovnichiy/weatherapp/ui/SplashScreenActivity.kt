@@ -1,4 +1,4 @@
-package com.example.ebobrovnichiy.weatherapp.ui.activity
+package com.example.ebobrovnichiy.weatherapp.ui
 
 import android.content.Intent
 import android.os.Bundle

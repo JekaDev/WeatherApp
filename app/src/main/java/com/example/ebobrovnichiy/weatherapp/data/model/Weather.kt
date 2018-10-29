@@ -1,4 +1,4 @@
-package com.example.ebobrovnichiy.weatherapp.model
+package com.example.ebobrovnichiy.weatherapp.data.model
 
 data class Weather(
         val id: Int,

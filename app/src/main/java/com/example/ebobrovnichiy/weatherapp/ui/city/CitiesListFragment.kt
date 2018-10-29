@@ -18,11 +18,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.ebobrovnichiy.weatherapp.R
 import com.example.ebobrovnichiy.weatherapp.di.Injectable
-import com.example.ebobrovnichiy.weatherapp.dto.Status.*
-import com.example.ebobrovnichiy.weatherapp.model.CityInfo
+import com.example.ebobrovnichiy.weatherapp.data.network.dto.Status.*
+import com.example.ebobrovnichiy.weatherapp.data.model.CityInfo
 import com.example.ebobrovnichiy.weatherapp.syncservice.ForecastUpdateJobService
-import com.example.ebobrovnichiy.weatherapp.ui.BaseDialog
-import com.example.ebobrovnichiy.weatherapp.ui.detail.DetailForecastFragment
+import com.example.ebobrovnichiy.weatherapp.ui.fragment.WarningDialog
 import com.firebase.jobdispatcher.FirebaseJobDispatcher
 import com.firebase.jobdispatcher.GooglePlayDriver
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
@@ -34,7 +33,6 @@ import com.firebase.jobdispatcher.Constraint
 import com.firebase.jobdispatcher.RetryStrategy
 import com.firebase.jobdispatcher.Trigger
 import com.firebase.jobdispatcher.Lifetime
-import kotlinx.android.synthetic.main.cities_list_fragment.*
 
 
 class CitiesListFragment : Fragment(), Injectable {
@@ -114,7 +112,7 @@ class CitiesListFragment : Fragment(), Injectable {
     }
 
     private fun longClicked(cityInfo: CityInfo) {
-        val dialog = BaseDialog.newInstance(getString(R.string.warning_delete_city))
+        val dialog = WarningDialog.newInstance(getString(R.string.warning_delete_city))
         dialog.onResult = { result ->
             cityViewModel.delete(cityInfo)
         }
