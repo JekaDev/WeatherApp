@@ -14,8 +14,5 @@ interface WeatherForecastDao {
         WHERE date(datetime(Forecast.date , 'unixepoch', 'localtime')) = date('now', 'localtime')
         AND Forecast.date = (SELECT MIN(Forecast.date) FROM Forecast)"""
     )
-    fun weatherForecasts(data: Int): LiveData<List<WeatherForecast>>
-
-    @Query("")
-    fun weatherForecastsByCityId(): LiveData<List<WeatherForecast>>
+    fun weatherForecasts(): LiveData<List<WeatherForecast>>
 }

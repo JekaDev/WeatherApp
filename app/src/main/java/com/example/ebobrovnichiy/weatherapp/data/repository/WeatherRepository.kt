@@ -95,10 +95,10 @@ class WeatherRepository @Inject constructor(
         }
     }
 
-    fun citiesInfoDb(data: Int): LiveData<Resource<List<CityInfo>>> {
+    fun citiesInfoDb(): LiveData<Resource<List<CityInfo>>> {
 
         appExecutors.diskIO().execute {
-            val ksmk = weatherForecastDao.weatherForecasts(data)
+            val ksmk = weatherForecastDao.weatherForecasts()
             result.addSource(ksmk){newItem ->
                 val kmk = ""
             }

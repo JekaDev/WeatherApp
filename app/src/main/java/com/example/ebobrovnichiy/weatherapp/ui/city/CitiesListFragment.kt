@@ -13,9 +13,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.example.ebobrovnichiy.weatherapp.R
 import com.example.ebobrovnichiy.weatherapp.di.Injectable
 import com.example.ebobrovnichiy.weatherapp.data.network.dto.Status.*
@@ -60,6 +58,8 @@ class CitiesListFragment : Fragment(), Injectable {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.cities_list_fragment, container, false)
+
+        setHasOptionsMenu(true)
 
         val newCityButton = view.findViewById(R.id.newCity) as FloatingActionButton;
         newCityButton.setOnClickListener {
@@ -125,6 +125,22 @@ class CitiesListFragment : Fragment(), Injectable {
                 { itemClicked: CityInfo -> itemClicked(itemClicked) })
 
         rvCitiesList.adapter = adapter
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.toolbar_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.action_update_period -> {
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
     }
 
     private fun initRepoList() {
