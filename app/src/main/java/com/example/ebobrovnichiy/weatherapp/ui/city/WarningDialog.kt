@@ -1,4 +1,4 @@
-package com.example.ebobrovnichiy.weatherapp.ui.fragment
+package com.example.ebobrovnichiy.weatherapp.ui.city
 
 import android.app.Dialog
 import android.os.Bundle
@@ -24,7 +24,7 @@ class WarningDialog : AppCompatDialogFragment() {
         val message = arguments?.getString(EXTRA_MESSAGE)
         return AlertDialog.Builder(context!!)
                 .setMessage(message)
-                .setPositiveButton(getString(R.string.positive_button)) { dialog, which ->
+                .setPositiveButton(getString(R.string.positive_button)) { _, _ ->
                     onResult?.invoke(true)
                 }
                 .setNegativeButton(getString(R.string.negative_button), null)
