@@ -6,4 +6,10 @@
     <string name="warning_delete_city">Delete this city?</string>
 
     <string name="menu_item_update_period">Set update period</string>
+
+    <!--Update period dialog-->
+    <string name="update_period_30_minutes">30 minutes</string>
+    <string name="update_period_1_hour">1 Hour</string>
+    <string name="update_period_3_hour">3 Hour</string>
+    <string name="title_period_update_dialog">Period update</string>
 </resources>

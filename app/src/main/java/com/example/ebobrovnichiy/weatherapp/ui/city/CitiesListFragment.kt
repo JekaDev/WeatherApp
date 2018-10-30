@@ -13,12 +13,14 @@ import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.util.TimeUtils
 import android.view.*
 import com.example.ebobrovnichiy.weatherapp.R
 import com.example.ebobrovnichiy.weatherapp.di.Injectable
 import com.example.ebobrovnichiy.weatherapp.data.network.dto.Status.*
 import com.example.ebobrovnichiy.weatherapp.data.model.CityInfo
 import com.example.ebobrovnichiy.weatherapp.syncservice.ForecastUpdateJobService
+import com.example.ebobrovnichiy.weatherapp.ui.fragment.UpdatePeriodDialog
 import com.example.ebobrovnichiy.weatherapp.ui.fragment.WarningDialog
 import com.firebase.jobdispatcher.FirebaseJobDispatcher
 import com.firebase.jobdispatcher.GooglePlayDriver
@@ -31,12 +33,14 @@ import com.firebase.jobdispatcher.Constraint
 import com.firebase.jobdispatcher.RetryStrategy
 import com.firebase.jobdispatcher.Trigger
 import com.firebase.jobdispatcher.Lifetime
+import java.util.concurrent.TimeUnit
 
 
 class CitiesListFragment : Fragment(), Injectable {
 
     companion object {
         const val PLACE_AUTOCOMPLETE_REQUEST_CODE = 1
+        const val JOB_DISPATCHER_TAG = "jobDispatcherTag"
         val TAG = CitiesListFragment::class.java.simpleName!!
     }
 
@@ -73,7 +77,7 @@ class CitiesListFragment : Fragment(), Injectable {
         }
 
         initAdapter(view)
-        fireBaseJobDispatcher()
+        setUpdatePeriod()
         return view
     }
 
@@ -135,6 +139,11 @@ class CitiesListFragment : Fragment(), Injectable {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             R.id.action_update_period -> {
+                val dialog = UpdatePeriodDialog.newInstance()
+                dialog.onResult = { result ->
+                }
+                dialog.show(fragmentManager, "UpdatePeriodDialog")
+
                 true
             }
             else -> {
@@ -159,30 +168,19 @@ class CitiesListFragment : Fragment(), Injectable {
         })
     }
 
-    private fun fireBaseJobDispatcher() {
+    private fun setUpdatePeriod(timeInterval: Int = 10) {
+
         val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
 
-        val myExtrasBundle = Bundle()
-        myExtrasBundle.putString("some_key", "some_value")
-
         val job = dispatcher.newJobBuilder()
-                // the JobService that will be called
                 .setService(ForecastUpdateJobService::class.java)
-                // uniquely identifies the job
-                .setTag("my-unique-tag")
-                // one-off job
+                .setTag(JOB_DISPATCHER_TAG)
                 .setRecurring(true)
-                // don't persist past a device reboot
                 .setLifetime(Lifetime.FOREVER)
-                // start between 0 and 60 seconds from now
-                .setTrigger(Trigger.executionWindow(0, 10))
-                // don't overwrite an existing job with the same tag
+                .setTrigger(Trigger.executionWindow(0, timeInterval))
                 .setReplaceCurrent(true)
-                // retry with exponential backoff
                 .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
-                // constraints that need to be satisfied for the job to run
                 .setConstraints(Constraint.ON_ANY_NETWORK)
-                .setExtras(myExtrasBundle)
                 .build()
 
         dispatcher.mustSchedule(job)
