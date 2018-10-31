@@ -19,8 +19,6 @@ import com.example.ebobrovnichiy.weatherapp.di.Injectable
 import com.example.ebobrovnichiy.weatherapp.data.network.dto.Status.*
 import com.example.ebobrovnichiy.weatherapp.data.model.CityWeather
 import com.example.ebobrovnichiy.weatherapp.syncservice.ForecastUpdateJobService
-import com.example.ebobrovnichiy.weatherapp.ui.fragment.UpdatePeriodDialog
-import com.example.ebobrovnichiy.weatherapp.ui.fragment.WarningDialog
 import com.firebase.jobdispatcher.FirebaseJobDispatcher
 import com.firebase.jobdispatcher.GooglePlayDriver
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException

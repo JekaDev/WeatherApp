@@ -1,10 +1,9 @@
-package com.example.ebobrovnichiy.weatherapp.ui.fragment
+package com.example.ebobrovnichiy.weatherapp.ui.city
 
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDialogFragment
-import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import com.example.ebobrovnichiy.weatherapp.R
@@ -19,22 +18,22 @@ class UpdatePeriodDialog : AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = activity!!.layoutInflater.inflate(R.layout.update_period_dialog, null as ViewGroup?)
+        val radio: RadioButton = view.findViewById(view.radio_group.checkedRadioButtonId)
 
         return AlertDialog.Builder(context!!)
                 .setView(view)
                 .setTitle(getString(R.string.title_period_update_dialog))
-                .setPositiveButton(getString(R.string.positive_button)) { dialog, which ->
-                    updatePeriod(view)?.let { onResult?.invoke(it) }
+                .setPositiveButton(getString(R.string.positive_button)) { _, _ ->
+                    updatePeriod(radio.id)?.let { onResult?.invoke(it) }
                 }
-                .setNegativeButton(getString(R.string.negative_button)) { dialog, which ->
+                .setNegativeButton(getString(R.string.negative_button)) { _, _ ->
                     dismiss()
                 }
                 .create()
     }
 
-    private fun updatePeriod(view: View): Int? {
-        val radio: RadioButton = view.findViewById(view.radio_group.checkedRadioButtonId)
-        return when (radio.id) {
+    private fun updatePeriod(radionButtonId: Int): Int? {
+        return when (radionButtonId) {
             R.id.period_30_min -> {
                 TimeUnit.MINUTES.toSeconds(30).toInt()
             }
