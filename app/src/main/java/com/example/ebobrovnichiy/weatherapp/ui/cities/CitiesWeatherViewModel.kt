@@ -1,13 +1,13 @@
-package com.example.ebobrovnichiy.weatherapp.ui.city
+package com.example.ebobrovnichiy.weatherapp.ui.cities
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import com.example.ebobrovnichiy.weatherapp.data.network.dto.Resource
-import com.example.ebobrovnichiy.weatherapp.data.model.CityInfo
+import com.example.ebobrovnichiy.weatherapp.data.model.CityWeather
 import com.example.ebobrovnichiy.weatherapp.data.repository.WeatherRepository
 import javax.inject.Inject
 
-class CityViewModel
+class CitiesWeatherViewModel
 @Inject
 constructor(
         private val repository: WeatherRepository
@@ -17,12 +17,12 @@ constructor(
         repository.citiesInfo(lat, lon)
     }
 
-    fun citiesInfo(): LiveData<Resource<List<CityInfo>>> {
+    fun citiesInfo(): LiveData<Resource<List<CityWeather>>> {
         return repository.citiesInfoDb()
     }
 
-    fun delete(cityInfo: CityInfo){
-        repository.deleteCityInfo(cityInfo)
+    fun delete(cityId: Int){
+        repository.deleteCityInfo(cityId)
     }
 
     fun update(){

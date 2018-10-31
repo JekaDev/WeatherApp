@@ -8,7 +8,7 @@ import com.example.ebobrovnichiy.weatherapp.data.network.api.WeatherService
 import com.example.ebobrovnichiy.weatherapp.data.db.dao.CityInfoDao
 import com.example.ebobrovnichiy.weatherapp.data.db.dao.ForecastDao
 import com.example.ebobrovnichiy.weatherapp.data.db.WeatherDb
-import com.example.ebobrovnichiy.weatherapp.data.db.dao.WeatherForecastDao
+import com.example.ebobrovnichiy.weatherapp.data.db.dao.CityWeatherDao
 import com.example.ebobrovnichiy.weatherapp.utilit.LiveDataCallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -74,7 +74,7 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideWeatherForecast(db: WeatherDb): WeatherForecastDao {
+    fun provideCitieWeather(db: WeatherDb): CityWeatherDao {
         return db.weatherForecastDao()
     }
 }

@@ -1,4 +1,4 @@
-package com.example.ebobrovnichiy.weatherapp.ui.city
+package com.example.ebobrovnichiy.weatherapp.ui.cities
 
 import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
@@ -13,12 +13,11 @@ import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.util.TimeUtils
 import android.view.*
 import com.example.ebobrovnichiy.weatherapp.R
 import com.example.ebobrovnichiy.weatherapp.di.Injectable
 import com.example.ebobrovnichiy.weatherapp.data.network.dto.Status.*
-import com.example.ebobrovnichiy.weatherapp.data.model.CityInfo
+import com.example.ebobrovnichiy.weatherapp.data.model.CityWeather
 import com.example.ebobrovnichiy.weatherapp.syncservice.ForecastUpdateJobService
 import com.example.ebobrovnichiy.weatherapp.ui.fragment.UpdatePeriodDialog
 import com.example.ebobrovnichiy.weatherapp.ui.fragment.WarningDialog
@@ -33,29 +32,28 @@ import com.firebase.jobdispatcher.Constraint
 import com.firebase.jobdispatcher.RetryStrategy
 import com.firebase.jobdispatcher.Trigger
 import com.firebase.jobdispatcher.Lifetime
-import java.util.concurrent.TimeUnit
 
 
-class CitiesListFragment : Fragment(), Injectable {
+class CitiesWeatherListFragment : Fragment(), Injectable {
 
     companion object {
         const val PLACE_AUTOCOMPLETE_REQUEST_CODE = 1
         const val JOB_DISPATCHER_TAG = "jobDispatcherTag"
-        val TAG = CitiesListFragment::class.java.simpleName!!
+        val TAG = CitiesWeatherListFragment::class.java.simpleName!!
     }
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var cityViewModel: CityViewModel
+    private lateinit var citiesWeatherViewModel: CitiesWeatherViewModel
 
     private lateinit var swipeRefresh: SwipeRefreshLayout
 
-    private lateinit var adapter: CityInfoAdapter
+    private lateinit var adapter: CityWeatherAdapter
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        cityViewModel = ViewModelProviders.of(this, viewModelFactory).get(CityViewModel::class.java)
+        citiesWeatherViewModel = ViewModelProviders.of(this, viewModelFactory).get(CitiesWeatherViewModel::class.java)
 
         initRepoList()
     }
@@ -72,7 +70,7 @@ class CitiesListFragment : Fragment(), Injectable {
 
         swipeRefresh = view.findViewById(R.id.swipeRefresh)
         swipeRefresh.setOnRefreshListener {
-            cityViewModel.update()
+            citiesWeatherViewModel.update()
             swipeRefresh.isRefreshing = false
         }
 
@@ -99,7 +97,7 @@ class CitiesListFragment : Fragment(), Injectable {
         when (resultCode) {
             RESULT_OK -> {
                 val place = PlaceAutocomplete.getPlace(activity, data)
-                cityViewModel.addNewCity(place.latLng.latitude, place.latLng.longitude)
+                citiesWeatherViewModel.addNewCity(place.latLng.latitude, place.latLng.longitude)
                 Log.i(TAG, "Place: " + place.latLng)
             }
             RESULT_ERROR -> {
@@ -112,21 +110,21 @@ class CitiesListFragment : Fragment(), Injectable {
         }
     }
 
-    private fun itemClicked(cityInfo: CityInfo) {
+    private fun itemClicked(cityWeather: CityWeather) {
     }
 
-    private fun longClicked(cityInfo: CityInfo) {
+    private fun longClicked(cityWeather: CityWeather) {
         val dialog = WarningDialog.newInstance(getString(R.string.warning_delete_city))
         dialog.onResult = { result ->
-            cityViewModel.delete(cityInfo)
+            citiesWeatherViewModel.delete(cityWeather.cityId)
         }
         dialog.show(fragmentManager, "warningDialog")
     }
 
     private fun initAdapter(view: View) {
         val rvCitiesList = view.findViewById<RecyclerView>(R.id.rvCitiesList)
-        adapter = CityInfoAdapter({ longClicked: CityInfo -> longClicked(longClicked) },
-                { itemClicked: CityInfo -> itemClicked(itemClicked) })
+        adapter = CityWeatherAdapter({ longClicked: CityWeather -> longClicked(longClicked) },
+                { itemClicked: CityWeather -> itemClicked(itemClicked) })
 
         rvCitiesList.adapter = adapter
     }
@@ -153,7 +151,7 @@ class CitiesListFragment : Fragment(), Injectable {
     }
 
     private fun initRepoList() {
-        cityViewModel.citiesInfo().observe(this, Observer { data ->
+        citiesWeatherViewModel.citiesInfo().observe(this, Observer { data ->
 
             when (data?.status) {
                 LOADING -> {

@@ -4,7 +4,7 @@ import android.util.Log
 import com.example.ebobrovnichiy.weatherapp.di.AppInjector
 import com.example.ebobrovnichiy.weatherapp.di.weatherApp
 import com.example.ebobrovnichiy.weatherapp.data.repository.WeatherRepository
-import com.example.ebobrovnichiy.weatherapp.ui.city.CitiesListFragment
+import com.example.ebobrovnichiy.weatherapp.ui.cities.CitiesWeatherListFragment
 import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
 import dagger.android.AndroidInjection
@@ -13,7 +13,7 @@ import javax.inject.Inject
 class ForecastUpdateJobService : JobService() {
 
     companion object {
-        val TAG = CitiesListFragment::class.java.simpleName!!
+        val TAG = CitiesWeatherListFragment::class.java.simpleName!!
     }
 
     @Inject

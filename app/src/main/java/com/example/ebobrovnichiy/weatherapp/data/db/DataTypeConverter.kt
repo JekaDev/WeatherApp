@@ -1,6 +1,7 @@
 package com.example.ebobrovnichiy.weatherapp.data.db
 
 import android.arch.persistence.room.TypeConverter
+import com.example.ebobrovnichiy.weatherapp.BuildConfig.IMAGE_URL
 import com.example.ebobrovnichiy.weatherapp.data.model.Weather
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -24,7 +25,12 @@ class DataTypeConverter {
     }
 
     @TypeConverter
-    fun ListToString(someObjects: List<Weather>): String {
+    fun listToString(someObjects: List<Weather>): String {
+
+        someObjects.forEach { item ->
+            item.iconUrl = IMAGE_URL.replace("*", item.icon)
+        }
+
         return gson.toJson(someObjects)
     }
 }

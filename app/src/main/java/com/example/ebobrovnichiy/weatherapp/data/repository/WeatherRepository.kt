@@ -7,10 +7,10 @@ import com.example.ebobrovnichiy.weatherapp.data.network.api.WeatherService
 import com.example.ebobrovnichiy.weatherapp.data.db.dao.CityInfoDao
 import com.example.ebobrovnichiy.weatherapp.data.db.dao.ForecastDao
 import com.example.ebobrovnichiy.weatherapp.data.db.WeatherDb
-import com.example.ebobrovnichiy.weatherapp.data.db.dao.WeatherForecastDao
+import com.example.ebobrovnichiy.weatherapp.data.db.dao.CityWeatherDao
 import com.example.ebobrovnichiy.weatherapp.data.network.dto.*
-import com.example.ebobrovnichiy.weatherapp.data.model.CityInfo
 import com.example.ebobrovnichiy.weatherapp.data.model.Forecast
+import com.example.ebobrovnichiy.weatherapp.data.model.CityWeather
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,11 +21,11 @@ class WeatherRepository @Inject constructor(
         private val weatherService: WeatherService,
         private val cityInfoDao: CityInfoDao,
         private val forecastDao: ForecastDao,
-        private val weatherForecastDao: WeatherForecastDao,
+        private val cityWeatherDao: CityWeatherDao,
         private val db: WeatherDb
 ) {
 
-    private val result = MediatorLiveData<Resource<List<CityInfo>>>()
+    private val result = MediatorLiveData<Resource<List<CityWeather>>>()
 
     companion object {
         val TAG = WeatherRepository::class.java.simpleName
@@ -95,18 +95,11 @@ class WeatherRepository @Inject constructor(
         }
     }
 
-    fun citiesInfoDb(): LiveData<Resource<List<CityInfo>>> {
-
-        appExecutors.diskIO().execute {
-            val ksmk = weatherForecastDao.weatherForecasts()
-            result.addSource(ksmk){newItem ->
-                val kmk = ""
-            }
-        }
+    fun citiesInfoDb(): LiveData<Resource<List<CityWeather>>> {
 
         result.value = Resource.loading(null)
         appExecutors.diskIO().execute {
-            val response = cityInfoDao.findAll()
+            val response = cityWeatherDao.citiesWeather()
             result.addSource(response) { newData ->
                 result.value = Resource.success(response.value)
             }
@@ -114,10 +107,10 @@ class WeatherRepository @Inject constructor(
         return result
     }
 
-    fun deleteCityInfo(cityInfo: CityInfo) {
+    fun deleteCityInfo(cityId: Int) {
         result.value = Resource.loading(null)
         appExecutors.diskIO().execute {
-            cityInfoDao.delete(cityInfo)
+            cityInfoDao.delete(cityId)
         }
     }
 }

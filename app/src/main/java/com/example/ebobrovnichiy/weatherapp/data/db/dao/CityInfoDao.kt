@@ -19,6 +19,6 @@ interface CityInfoDao {
     @Query("SELECT * FROM cityInfo")
     fun findCities(): List<CityInfo>
 
-    @Delete
-    fun delete(cityInfo: CityInfo)
+    @Query("DELETE From cityinfo WHERE id = :cityId")
+    fun delete(cityId: Int)
 }
