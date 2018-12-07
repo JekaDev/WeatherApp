@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/radio_group"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RadioButton
+        android:id="@+id/period_30_min"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/update_period_dialog_margin_horizontal"
+        android:layout_marginLeft="@dimen/update_period_dialog_margin_horizontal"
+        android:layout_marginTop="@dimen/update_period_dialog_margin_vertical"
+        android:paddingStart="@dimen/update_period_dialog_padding_vertical"
+        android:paddingLeft="@dimen/update_period_dialog_padding_vertical"
+        android:text="@string/update_period_30_minutes"
+        android:checked="true"
+        tools:ignore="RtlSymmetry" />
+
+    <RadioButton
+        android:id="@+id/period_1_h"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/update_period_dialog_margin_horizontal"
+        android:layout_marginLeft="@dimen/update_period_dialog_margin_horizontal"
+        android:layout_marginTop="@dimen/update_period_dialog_margin_vertical"
+        android:paddingStart="@dimen/update_period_dialog_padding_vertical"
+        android:paddingLeft="@dimen/update_period_dialog_padding_vertical"
+        android:text="@string/update_period_1_hour"
+        tools:ignore="RtlSymmetry" />
+
+    <RadioButton
+        android:id="@+id/period_3_h"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/update_period_dialog_margin_horizontal"
+        android:layout_marginLeft="@dimen/update_period_dialog_margin_horizontal"
+        android:layout_marginTop="@dimen/update_period_dialog_margin_vertical"
+        android:paddingStart="@dimen/update_period_dialog_padding_vertical"
+        android:paddingLeft="@dimen/update_period_dialog_padding_vertical"
+        android:text="@string/update_period_3_hour"
+        tools:ignore="RtlSymmetry" />
+</RadioGroup>
